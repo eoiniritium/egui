@@ -12,7 +12,7 @@
     egui::eRectangle banner(0, 0, SCREENX, 50, BLUE);
 
     // Label
-    egui::Label t("Egui", 5, 8, 24, WHITE, RED, 5, 5);
+    egui::Label t("Egui showcase", 5, 8, 24, WHITE, RED, 5, 5);
 
     std::string scroll_attr;
     egui::Label scroll_info("", 1100, 8, 24, WHITE, RED, 5, 5);
