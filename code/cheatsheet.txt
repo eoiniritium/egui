@@ -1,0 +1,43 @@
+/*
+ *  Author: Eoin Mag Ualghairg 
+ *  Dependencies: raylib (https://www.raylib.com/)
+ *  Language: C++
+ */
+
+
+#define TEXT_BUFFER 100000                                                                                                                                                          // All strings are 100kb long so there are no buffer overflows
+
+namespace egui
+    void initwindow(int x, int y, std::string windowName, const int targetfps)                                                                                                      // Initialise opengl context
+    char* to_char_array(std::string string)                                                                                                                                         // Provide a pointer to first character in a C++ string
+    void string_cpp_to_c(char* dest std::string source)                                                                                                                             // strcpy a std::string into a char to_char_array
+
+    class Label                 
+        Label(std::string txt, int x, int y, int fontsize, Color font_color, Color background_color, int padding_tb, int padding_lr)                                                                                                                                    // Constructor for a label
+        void draw(void)                                                                                                                                                                                                                                                 // Draw label
+        int middle_width_x(void)                                                                                                                                                                                                                                        // Get centre of label on x axis
+        int middle_height_y(void)                                                                                                                                                                                                                                       // Get centre of label on y axis
+        void scroll(int amount)                                                                                                                                                                                                                                         // Scroll element
+
+    class eRectangle                                                                                                        
+        eRectangle(int pos_x, int pos_y, int width_x, int width_y, Color colour)                                                                                                                                                                                        // Constructor for a rectangle to be drawn on screen
+        void draw(void)                                                                                                                                                                                                                                                 // Draws rectangle onto screen
+        void scroll(int amount)                                                                                                                                                                                                                                         // Scroll element
+
+    class v_Scrollbar                                                                                                       
+        v_Scrollbar(int screenwidth, int width, int starty, int endy int scrollpoints, int scroll_multiplier, Color bar_colour, Color trackbar_colour)                                                                                                                  // Constructor for a vertical scrollbar
+        void draw(void)                                                                                                                                                                                                                                                 // Draw Scroll bar on screen
+        void scroll(void)                                                                                                                                                                                                                                               // Detect scroll wheel activity and set scroll bar thumb's position
+        int getscroll(void)                                                                                                                                                                                                                                             // Get amount of pixels scrolled
+
+    class Button                                                                                    
+        Button(std::string txt, int fontsize, int posx, int posy, int paddingl, int paddingt, Color foreground, Color background, Color onhover, void(*on_click_function)())                                                                                            // Constructor for a Button
+        void draw(void)                                                                                                                                                                                                                                                 // Draw Button
+        void scroll(int amount)                                                                                                                                                                                                                                         // Scroll element
+        void is_click_single(void)                                                                                                                                                                                                                                      // If clicked on the button will call function passed through as parameter once (even if button is held down)
+        void is_click_multiple(void)                                                                                                                                                                                                                                    // If clicked on the button will call function passed through as parameter on everyframe draw until released
+    
+    class Messagebox
+        Messagebox(std::string title, std::string message, int screenwidth, int screenheight, int width, int height, Color foreground, Color background, Color outline = BLACK, int outline_thickness = 0, int padding_top = 1, int padding_left = 1)                   // Constructor for a Messagebox
+        void toggle_visibility(void)                                                                                                                                                                                                                                    // Shows messagebox if hidden and vice versa
+        void draw(void)                                                                                                                                                                                                                                                 // Draws if set to visible
