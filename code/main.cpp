@@ -26,7 +26,7 @@
     egui::Messagebox entry_messagebox("Entry", "", SCREENX, SCREENY, 600, 225, WHITE, BLUE, LIGHTGRAY, 2, 20, 40);
 
     // Entry
-    egui::Entry entry("Type here", 16, 900, 70, 321, 32, 20, 10, BLACK, WHITE, BLUE, 2);
+    egui::Entry entry("Type here", 18, 900, 70, 321, 32, 20, 10, BLACK, WHITE, BLUE, 2);
 
     // Buttons
     void showmsgbox()
@@ -86,6 +86,7 @@ int main()
             // MessageBox
             msgbox.draw();
             entry_messagebox.draw();
+
         EndDrawing();
     }
 
