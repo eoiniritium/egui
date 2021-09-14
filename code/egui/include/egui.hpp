@@ -467,7 +467,7 @@ namespace egui
 
     class barGraph
     {   public:
-        barGraph(int* data, int posx, int posy, int height, int width, int num_bars, int scale_min, int scale_max, Color foreground, Color background, Color outline, int outline_thickness = 0, int bar_padding = 5)
+        barGraph(int* data, int posx, int posy, int width, int height, int num_bars, int scale_min, int scale_max, Color foreground, Color background, Color outline, int outline_thickness = 0, int bar_padding = 5)
         {
             scrolled = 0;
 
@@ -514,6 +514,14 @@ namespace egui
             }
         }
 
+        void update_data(int *data, int min, int max)
+        {
+            int amrediad = max - min;
+            int available = h - (out_w * 2) - bar_p;
+            norm = available / amrediad;
+
+            d = data;
+        }
 
         void scroll(int amount)
         {
