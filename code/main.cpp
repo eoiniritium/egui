@@ -2,6 +2,8 @@
 #include <cstring>
 #include "raylib.h"
 #include "egui.hpp"
+#include <time.h>
+#include <stdlib.h>
 
 #define SCREENX 1280
 #define SCREENY 720
@@ -19,7 +21,7 @@
     egui::Label showmsgbox_btn_lbl("A button to show a Message Box", 15, 80, 24, BLACK, WHITE, 5, 5);
 
     // Scroll bar
-    egui::v_Scrollbar scroll(SCREENX, 2, 50, SCREENY, 10, 20, LIGHTGRAY, DARKGRAY);
+    egui::v_Scrollbar scroll(SCREENX, 5, 50, SCREENY, 50, 40, LIGHTGRAY, DARKGRAY);
 
     // Alert
     egui::Messagebox msgbox("Message Box", "This is a Message Box.\nYou can display important information here!", SCREENX, SCREENY, 600, 225, WHITE, BLUE, LIGHTGRAY, 2, 20, 40);
@@ -27,6 +29,11 @@
 
     // Entry
     egui::Entry entry("Type here", 18, 900, 70, 321, 32, 20, 10, BLACK, WHITE, BLUE, 2);
+
+    // Graph
+    int data[10] = {7, 43, 60, 55, 1, 38, 18, 44, 103, 81};
+    egui::barGraph g(data, 8, 200, 1260, 500, 10, 0, 105, BLACK, LIGHTGRAY, BLUE, 5);
+
 
     // Buttons
     void showmsgbox()
@@ -61,6 +68,7 @@ int main()
         showmsgbox_btn_lbl.scroll(scrolled);
         entry.scroll(scrolled);
         btn_Entry.scroll(scrolled);
+        g.scroll(scrolled);
 
         BeginDrawing();
             ClearBackground(WHITE);
@@ -72,6 +80,7 @@ int main()
             button.is_click_single();
             showmsgbox_btn_lbl.draw();
             entry.draw();
+            g.draw();
 
 
 
