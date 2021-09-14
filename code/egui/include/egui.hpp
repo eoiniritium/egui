@@ -465,7 +465,68 @@ namespace egui
         std::string text_String;
     };
 
+    class barGraph
+    {   public:
+        barGraph(int* data, int posx, int posy, int height, int width, int num_bars, int scale_min, int scale_max, Color foreground, Color background, Color outline, int outline_thickness = 0, int bar_padding = 5)
+        {
+            scrolled = 0;
 
+            fg = foreground;
+            bg = background;
+            outl = outline;
+
+            x = posx;
+            y = posy;
+            h = height;
+            w = width;
+            nb = num_bars;
+            smin = scale_min;
+            smax = scale_max;
+            out_w = outline_thickness;
+
+            bar_p = bar_padding;
+            bar_w = (w - (bar_p * nb + 1) - out_w * 2)/nb; // calculate bar width
+
+            d = data;
+
+            int amrediad = smax - smin;
+            int available = h - (out_w * 2) - bar_p;
+            norm = available / amrediad;
+        }
+
+        void draw()
+        {
+            out.x = x;
+            out.y = y + scrolled;
+            out.width = w;
+            out.height = h;
+
+            DrawRectangle(x, out.y, w, h, bg);
+            DrawRectangleLinesEx(out, out_w, outl);
+
+            int baseline = out.y + h - bar_p; // Starting location of all bars on y axis
+            int c_pixel = x + bar_p + out_w; // Get position of bar
+
+            for(int i = 0; i < nb; ++i)
+            {
+                DrawRectangle(c_pixel, baseline - (d[i] * norm), bar_w, d[i] * norm, fg);
+                c_pixel += bar_w + bar_p;
+            }
+        }
+
+
+        void scroll(int amount)
+        {
+            scrolled = -amount;
+        }
+
+        int x, y, h, w, nb, smin, smax, scrolled, out_w, norm;
+        Color fg, bg, outl;
+        Rectangle out;
+
+        int bar_w, bar_p;
+        int* d;
+    };
 
 
 

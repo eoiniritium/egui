@@ -19,7 +19,7 @@
     egui::Label showmsgbox_btn_lbl("A button to show a Message Box", 15, 80, 24, BLACK, WHITE, 5, 5);
 
     // Scroll bar
-    egui::v_Scrollbar scroll(SCREENX, 2, 50, SCREENY, 10, 20, LIGHTGRAY, DARKGRAY);
+    egui::v_Scrollbar scroll(SCREENX, 2, 50, SCREENY, 10, 40, LIGHTGRAY, DARKGRAY);
 
     // Alert
     egui::Messagebox msgbox("Message Box", "This is a Message Box.\nYou can display important information here!", SCREENX, SCREENY, 600, 225, WHITE, BLUE, LIGHTGRAY, 2, 20, 40);
@@ -27,6 +27,11 @@
 
     // Entry
     egui::Entry entry("Type here", 18, 900, 70, 321, 32, 20, 10, BLACK, WHITE, BLUE, 2);
+
+    // Graph
+    int data[10] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    egui::barGraph g(data, 200, 200, 400, 600, 10, 0, 100, GREEN, BLACK, BLUE, 5);
+
 
     // Buttons
     void showmsgbox()
@@ -61,6 +66,7 @@ int main()
         showmsgbox_btn_lbl.scroll(scrolled);
         entry.scroll(scrolled);
         btn_Entry.scroll(scrolled);
+        g.scroll(scrolled);
 
         BeginDrawing();
             ClearBackground(WHITE);
@@ -72,6 +78,7 @@ int main()
             button.is_click_single();
             showmsgbox_btn_lbl.draw();
             entry.draw();
+            g.draw();
 
 
 
