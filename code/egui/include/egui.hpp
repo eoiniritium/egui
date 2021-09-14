@@ -8,6 +8,7 @@
 #include <cstring>
 #include "raylib.h"
 #define TEXT_BUFFER 100000 // 100,000  bytes long
+#define BCKSPC 259
 
 namespace egui
 {
@@ -237,7 +238,7 @@ namespace egui
             int mx = GetMouseX();
             int my = GetMouseY();
 
-            if((mx >= x) && (mx <= x + size + pl*2) && (my >= y) && (my <= y + pt*2 + fs))
+            if((mx >= x) && (mx <= x + size + pl*2) && (my >= y + scrolled) && (my <= y + pt*2 + fs + scrolled))
             {
                 return 1;
             }
@@ -301,6 +302,12 @@ namespace egui
             return 0;
         }
 
+        void set_text(std::string new_title, std::string new_message)
+        {
+            string_cpp_to_c(t, new_title);
+            string_cpp_to_c(m, new_message);
+        }
+
         void draw()
         {
             if(flag)    
@@ -340,7 +347,123 @@ namespace egui
         Rectangle bttn_lines;
     };
 
+    class Entry
+    {   public:
+        Entry(std::string txt, int max_length, int posx, int posy, int width, int fontsize, int padding_horizontal, int padding_vertical, Color text_col, Color background, Color outline, int thickness = 0)
+        {   text_String = txt;
+            string_cpp_to_c(text, txt);
+            char_counter = strlen(text);
+            x = posx;
+            y = posy;
 
+            pv = padding_vertical;
+            ph = padding_horizontal;
+            w = width + padding_horizontal * 2;
+            h = padding_vertical * 2 + fontsize;
+            fs = fontsize;
+            fg = text_col;
+            bg = background;
+            out = outline;
+            out_thi = thickness;
+
+            m_l = max_length;
+
+            out_line.x = posx;
+            out_line.y = posy;
+            out_line.width = w;
+            out_line.height = h;
+            flag = 0; // Not selected
+            scrolled = 0;
+        }
+
+        void draw()
+        {
+            if(hover())
+            {
+                SetMouseCursor(MOUSE_CURSOR_IBEAM);
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                {
+                    flag = 1; // Text typing mode
+                }
+            }
+            else 
+            {
+                SetMouseCursor(MOUSE_CURSOR_DEFAULT);
+                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+                {
+                    flag = 0; // Not selected
+                }
+
+            }
+
+            if(flag)
+            {
+                int k = GetCharPressed();
+                int i = GetKeyPressed();
+                
+                switch(i)
+                {
+                    case BCKSPC: // Backspace
+                        if(char_counter > 0) // Make sure it does not wrap under
+                        {
+                            --char_counter;
+                            text_String.pop_back();
+                            string_cpp_to_c(text, text_String);
+                        }
+                        
+                        break;
+
+                    case 257: // Enter
+                        flag = 0;
+                        break;
+                    
+                    default:
+                        if(k && char_counter < m_l) // != 0
+                        {
+                            text_String += k;
+                            ++char_counter;
+                            string_cpp_to_c(text, text_String);
+                        }
+                }
+            }
+
+            DrawRectangle(x, y+scrolled, w, h, bg);
+            out_line.y = y + scrolled;
+            DrawRectangleLinesEx(out_line, out_thi, out);
+            DrawText(text, x + ph, y + pv + scrolled, fs, fg);
+        }
+
+        std::string get_text()
+        {
+            return text_String;
+        }
+
+        void scroll(int amount)
+        {
+            scrolled = -amount;
+        }
+
+        private:
+        int hover()
+        {
+            int mx = GetMouseX();
+            int my = GetMouseY();
+
+            if( mx >= out_line.x && mx <= out_line.x + out_line.width && my >= out_line.y && my <= out_line.y + out_line.height)
+            {
+                return 1;
+            }
+            return 0;
+        }
+
+        public:
+        int x, y, w, h, ph, pv, fs, flag, char_counter, m_l, scrolled;
+        Color fg, bg, out;
+        int out_thi;
+        Rectangle out_line;
+        char text[TEXT_BUFFER];
+        std::string text_String;
+    };
 
 
 

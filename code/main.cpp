@@ -23,13 +23,24 @@
 
     // Alert
     egui::Messagebox msgbox("Message Box", "This is a Message Box.\nYou can display important information here!", SCREENX, SCREENY, 600, 225, WHITE, BLUE, LIGHTGRAY, 2, 20, 40);
+    egui::Messagebox entry_messagebox("Entry", "", SCREENX, SCREENY, 600, 225, WHITE, BLUE, LIGHTGRAY, 2, 20, 40);
+
+    // Entry
+    egui::Entry entry("Type here", 16, 900, 70, 321, 32, 20, 10, BLACK, WHITE, BLUE, 2);
 
     // Buttons
     void showmsgbox()
     {
         msgbox.toggle_visibility();
     }
+    void showmsgbox_entry()
+    {
+        entry_messagebox.set_text("Entry", "Text: " + entry.get_text());
+        entry_messagebox.toggle_visibility();
+    }
+
     egui::Button button("Show Message Box", 36, 10, 120, 40, 10, WHITE, BLUE, GRAY, showmsgbox);
+    egui::Button btn_Entry("Get Text", 36, 900, 120, 100, 10, WHITE, BLUE, GRAY, showmsgbox_entry);
 
 
 int main()
@@ -48,26 +59,33 @@ int main()
         //Scroll
         button.scroll(scrolled);
         showmsgbox_btn_lbl.scroll(scrolled);
+        entry.scroll(scrolled);
+        btn_Entry.scroll(scrolled);
 
         BeginDrawing();
             ClearBackground(WHITE);
             
 
-           
+            btn_Entry.draw();
+            btn_Entry.is_click_single();
             button.draw();
             button.is_click_single();
             showmsgbox_btn_lbl.draw();
+            entry.draw();
 
 
 
 
 
-
+            // Top bar
             banner.draw();
             t.draw();
             scroll_info.draw();
             scroll.draw();
+
+            // MessageBox
             msgbox.draw();
+            entry_messagebox.draw();
         EndDrawing();
     }
 
