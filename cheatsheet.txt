@@ -5,12 +5,12 @@
  */
 
 
-#define TEXT_BUFFER 100000                                                                                                                                                          // All strings are 100kb long so there are no buffer overflows
-
-namespace egui
-    void initwindow(int x, int y, std::string windowName, const int targetfps)                                                                                                      // Initialise opengl context
-    char* to_char_array(std::string string)                                                                                                                                         // Provide a pointer to first character in a C++ string
-    void string_cpp_to_c(char* dest std::string source)                                                                                                                             // strcpy a std::string into a char to_char_array
+#define TEXT_BUFFER 100000                                                                                                                                                                                                                                              // All strings are 100kb long
+                                                            
+namespace egui                                                                                  
+    void initwindow(int x, int y, std::string windowName, const int targetfps)                                                                                                                                                                                          // Initialise opengl context
+    char* to_char_array(std::string string)                                                                                                                                                                                                                             // Provide a pointer to first character in a C++ string
+    void string_cpp_to_c(char* dest std::string source)                                                                                                                                                                                                                 // strcpy a std::string into a char to_char_array
 
     class Label                 
         Label(std::string txt, int x, int y, int fontsize, Color font_color, Color background_color, int padding_tb, int padding_lr)                                                                                                                                    // Constructor for a label
@@ -19,8 +19,8 @@ namespace egui
         int middle_height_y(void)                                                                                                                                                                                                                                       // Get centre of label on y axis
         void scroll(int amount)                                                                                                                                                                                                                                         // Scroll element
 
-    class eRectangle                                                                                                        
-        eRectangle(int pos_x, int pos_y, int width_x, int width_y, Color colour)                                                                                                                                                                                        // Constructor for a rectangle to be drawn on screen
+    class Oblong                                                                                                        
+        Oblong(int pos_x, int pos_y, int width_x, int width_y, Color colour)                                                                                                                                                                                            // Constructor for a rectangle to be drawn on screen
         void draw(void)                                                                                                                                                                                                                                                 // Draws rectangle onto screen
         void scroll(int amount)                                                                                                                                                                                                                                         // Scroll element
 

@@ -85,9 +85,9 @@ namespace egui
     };
 
 
-    class eRectangle
+    class Oblong // rectangle
     {   public:
-        eRectangle(int pos_x, int pos_y, int width_x, int width_y, Color colour)
+        Oblong(int pos_x, int pos_y, int width_x, int width_y, Color colour)
         {
             x   = pos_x;
             y   = pos_y;

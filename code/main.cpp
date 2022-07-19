@@ -11,7 +11,7 @@
 
 
 // Banner
-    egui::eRectangle banner(0, 0, SCREENX, 50, BLUE);
+    egui::Oblong banner(0, 0, SCREENX, 50, BLUE);
 
     // Label
     egui::Label t("Egui showcase", 5, 8, 24, WHITE, RED, 5, 5);
