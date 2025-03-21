@@ -2,13 +2,23 @@
 #include <cstring>
 #include "raylib.h"
 #include "egui.hpp"
+#include "messagebox.hpp"
 #include <time.h>
 #include <stdlib.h>
 
 #define SCREENX 1280
 #define SCREENY 720
 
+class App {
+    public:
+    egui::screen screen;
+    private:
+    egui::Oblong *banner;
+    egui::Label  *title;
 
+    egui::v_Scrollbar *scrollbar;
+    egui::scroll
+}
 
 // Banner
     egui::Oblong banner(0, 0, SCREENX, 50, BLUE);

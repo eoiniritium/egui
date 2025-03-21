@@ -1,7 +1,4 @@
-// Wrapper header
-
-#ifndef EGUI
-#define EGUI
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -12,6 +9,15 @@
 
 namespace egui
 {
+    class UIComponent {
+        public:
+        virtual void draw(bool );
+    };
+
+
+    struct screen {
+        int sw, sh;
+    };
 
     void initwindow(const int x, const int y, std::string windowName, const int targetfps)
     {
@@ -22,11 +28,6 @@ namespace egui
     char *to_char_array(std::string string)
     {
         return &string[0];
-    }
-
-    void string_cpp_to_c(char* dest, std::string source)
-    {
-        strcpy_s(dest, TEXT_BUFFER, to_char_array(source));
     }
 
     class Label
@@ -107,9 +108,11 @@ namespace egui
             scrolled = -amount;
         }
 
-        private:
-        int x, y, wx, wy, scrolled;
+        int x, y, wx, wy;
         Color col;
+
+        private:
+        int scrolled;
     };
 
 
@@ -250,222 +253,9 @@ namespace egui
         int scrolled;
     };
 
-    class Messagebox
-    {   public:
-        Messagebox(std::string title, std::string message, int screenwidth, int screenheight, int width, int height, Color foreground, Color background, Color outline = BLACK, int outline_thickness = 0, int padding_top = 1, int padding_left = 1)
-        {
-            string_cpp_to_c(t, title);
-            string_cpp_to_c(m, message);
+    
 
-
-            pt = padding_top;
-            pl = padding_left;
-
-            sw = screenwidth;
-            sh = screenheight;
-
-            w = width;
-            h = height;
-
-            fg = foreground;
-            bg = background;
-            out = outline;
-            out_thicc = outline_thickness;
-
-         // Rectangle lines
-            lines.x = sw/2 - w/2;
-            lines.y = sh/2 - h/2;
-            lines.width = w;
-            lines.height = h;
-
-         // Rectangle bttn_lines
-            bttn_lines.x = lines.x + w - btn_w - btn_padding;
-            bttn_lines.y = lines.y + h - btn_h - btn_padding;
-            bttn_lines.width = btn_w;
-            bttn_lines.height = btn_h;
-        }
-
-        void toggle_visibility()
-        {
-            flag = !flag;
-        }
-
-        int hover()
-        {
-            int x, y;
-            x = GetMouseX();
-            y = GetMouseY();
-
-            if(x >= bttn_lines.x && x <= bttn_lines.x + bttn_lines.width && y >= bttn_lines.y && y <= bttn_lines.y + bttn_lines.height)
-            {
-                return 1;
-            }
-            return 0;
-        }
-
-        void set_text(std::string new_title, std::string new_message)
-        {
-            string_cpp_to_c(t, new_title);
-            string_cpp_to_c(m, new_message);
-        }
-
-        void draw()
-        {
-            if(flag)    
-            {
-                DrawRectangle(sw/2 - w/2, sh/2 - h/2, w, h, bg);
-                
-                DrawRectangleLinesEx(lines, out_thicc, out);
-                DrawText(t, lines.x + pl, lines.y + pt, title_fs, fg);
-                DrawText(m, lines.x + pl, lines.y + title_fs + pt*3, message_fs, fg);
-
-                // Ok button
-                DrawRectangle(bttn_lines.x, bttn_lines.y, bttn_lines.width, bttn_lines.height, fg);
-                DrawRectangleLinesEx(bttn_lines, out_thicc, out);
-                DrawText(btn_text, bttn_lines.x + bttn_lines.width/2 - MeasureText(btn_text, message_fs)/2, bttn_lines.y + bttn_lines.height/2 - message_fs/2, message_fs, bg);
-                
-                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && hover())
-                    toggle_visibility(); // flag =! flag;
-            }
-        }
-
-        const int title_fs = 36;
-        const int message_fs = 21;
-
-        const int btn_w = 100;
-        const int btn_h = 40;
-        const int btn_padding = 5;
-        const char btn_text[3] = "OK";
-
-        char t[TEXT_BUFFER];
-        char m[TEXT_BUFFER];
-        int pt, pl, sw, sh, w, h, out_thicc;
-        int flag = 0;
-
-        Color fg, bg, out;
-
-        Rectangle lines;
-        Rectangle bttn_lines;
-    };
-
-    class Entry
-    {   public:
-        Entry(std::string txt, int max_length, int posx, int posy, int width, int fontsize, int padding_horizontal, int padding_vertical, Color text_col, Color background, Color outline, int thickness = 0)
-        {   text_String = txt;
-            string_cpp_to_c(text, txt);
-            char_counter = strlen(text);
-            x = posx;
-            y = posy;
-
-            pv = padding_vertical;
-            ph = padding_horizontal;
-            w = width + padding_horizontal * 2;
-            h = padding_vertical * 2 + fontsize;
-            fs = fontsize;
-            fg = text_col;
-            bg = background;
-            out = outline;
-            out_thi = thickness;
-
-            m_l = max_length;
-
-            out_line.x = posx;
-            out_line.y = posy;
-            out_line.width = w;
-            out_line.height = h;
-            flag = 0; // Not selected
-            scrolled = 0;
-        }
-
-        void draw()
-        {
-            if(hover())
-            {
-                SetMouseCursor(MOUSE_CURSOR_IBEAM);
-                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-                {
-                    flag = 1; // Text typing mode
-                }
-            }
-            else 
-            {
-                SetMouseCursor(MOUSE_CURSOR_DEFAULT);
-                if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-                {
-                    flag = 0; // Not selected
-                }
-
-            }
-
-            if(flag)
-            {
-                int k = GetCharPressed();
-                int i = GetKeyPressed();
-                
-                switch(i)
-                {
-                    case BCKSPC: // Backspace
-                        if(char_counter > 0) // Make sure it does not wrap under
-                        {
-                            --char_counter;
-                            text_String.pop_back();
-                            string_cpp_to_c(text, text_String);
-                        }
-                        
-                        break;
-
-                    case 257: // Enter
-                        flag = 0;
-                        break;
-                    
-                    default:
-                        if(k && char_counter < m_l) // != 0
-                        {
-                            text_String += k;
-                            ++char_counter;
-                            string_cpp_to_c(text, text_String);
-                        }
-                }
-            }
-
-            DrawRectangle(x, y+scrolled, w, h, bg);
-            out_line.y = y + scrolled;
-            DrawRectangleLinesEx(out_line, out_thi, out);
-            DrawText(text, x + ph, y + pv + scrolled, fs, fg);
-        }
-
-        std::string get_text()
-        {
-            return text_String;
-        }
-
-        void scroll(int amount)
-        {
-            scrolled = -amount;
-        }
-
-        private:
-        int hover()
-        {
-            int mx = GetMouseX();
-            int my = GetMouseY();
-
-            if( mx >= out_line.x && mx <= out_line.x + out_line.width && my >= out_line.y && my <= out_line.y + out_line.height)
-            {
-                return 1;
-            }
-            return 0;
-        }
-
-        public:
-        int x, y, w, h, ph, pv, fs, flag, char_counter, m_l, scrolled;
-        Color fg, bg, out;
-        int out_thi;
-        Rectangle out_line;
-        char text[TEXT_BUFFER];
-        std::string text_String;
-    };
-
+    
     class barGraph
     {   public:
         barGraph(int* data, int posx, int posy, int width, int height, int num_bars, int scale_min, int scale_max, Color foreground, Color background, Color outline, int outline_thickness = 0, int bar_padding = 5)
@@ -536,12 +326,4 @@ namespace egui
         int bar_w, bar_p;
         int* d;
     };
-
-
-
-
-
-
 }
-
-#endif
