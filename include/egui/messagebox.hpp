@@ -6,12 +6,12 @@
 namespace egui {
     class Messagebox {
         public:
-        Messagebox(std::string title, std::string message, egui::screen screen, int width, int height, Color foreground, Color background, Color border_colour = BLACK, int border_thickness = 0, int padding_top = 1, int padding_left = 1) {
+        Messagebox(std::string title, std::string message, Pair<int> screen, int width, int height, Color foreground, Color background, Color border_colour = BLACK, int border_thickness = 0, int padding_top = 1, int padding_left = 1) {
             pt = padding_top;
             pl = padding_left;
 
-            sw = screen.sw;
-            sh = screen.sh;
+            sw = screen.x;
+            sh = screen.y;
 
             w = width;
             h = height;
