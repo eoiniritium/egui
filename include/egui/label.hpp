@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "egui.hpp"
 #include <string>
+#include <functional>
 
 namespace egui {
     class Label: public UIComponent {  
@@ -15,13 +16,17 @@ namespace egui {
             text::Text text,
             Pair<int> position, 
             Color bgColour,
+            onEventCallback click = nullptr,
+            onEventCallback hover = nullptr,
             Pair<int> padding = {0, 0}
         ) : UIComponent(
             position,
             {
                 (2 * padding.x) + MeasureText(text.text.c_str(), text.fontSize),
                 (2 * padding.y) + static_cast<int>(text.fontSize)
-            }
+            },
+            click,
+            hover
         ) {
             this->text = text;
             this->bgColour = bgColour;

@@ -11,6 +11,8 @@
 
 namespace egui {
 
+    typedef std::function<void()> onEventCallback;
+
     template<typename T>
     struct Pair {
         T x, y;
@@ -65,15 +67,32 @@ namespace egui {
     class UIComponent {
         public:
         Pair<int> position, size, scrolled;
+        
+        onEventCallback onClickFunction;
+        onEventCallback onHoverFunction;
+        onEventCallback onPressFunction;
 
         virtual void draw(Pair<int> scrolled) {};
-        virtual void onClick() {};
-        virtual void onHover() {};
+        virtual void onClick(onEventCallback onClickFunction) { if(onClickFunction) onClickFunction(); };
+        virtual void onHover(onEventCallback onClickFunction) { if(onHoverFunction) onHoverFunction(); };
+        virtual void onPress(onEventCallback onPressFunction) { if(onPressFunction) onPressFunction(); };
+        virtual ~UIComponent() {};
 
-        UIComponent(Pair<int> position, Pair<int> size, Pair<int> scroll = {0, 0}) {
+        UIComponent(
+            Pair<int> position,
+            Pair<int> size,
+            onEventCallback onClick = nullptr,
+            onEventCallback onHover = nullptr,
+            onEventCallback onPress = nullptr,
+            Pair<int> scroll = {0, 0}
+        ) {
             this->position = position;
             this->size = size;
             this->scrolled = scroll;
+
+            this->onClickFunction = onClick;
+            this->onHoverFunction = onHover;
+            this->onPressFunction = onPress;
         }
 
         void render(Pair<int> scrolled) {
@@ -82,13 +101,22 @@ namespace egui {
         }
 
         bool click() {
-            if(IsMouseButtonReleased(MOUSE_BUTTON_LEFT) && hover()) {
-                onClick();
+            if(hover() && IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+                onClick(onClickFunction);
                 return true;
             }
 
             return false;
         }
+
+        bool pressed() {
+            if(hover() && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+                onPress(onPressFunction);
+                return true;
+            }
+
+            return false;
+        } 
 
         bool hover() {
             Pair<int> mouse;
@@ -98,14 +126,14 @@ namespace egui {
             bool insideX = mouse.x >= position.x && mouse.x <= position.x + size.x;
             bool insideY = mouse.y >= position.y && mouse.y <= position.y + size.y;
             if (insideX && insideY) {
-                onHover();
+                onHover(onHoverFunction);
                 return true;
             }
 
             return false;
         }
 
-        virtual ~UIComponent() {};
+        
     };
 
     class App  {
@@ -133,6 +161,7 @@ namespace egui {
                 if(beforeDraw != nullptr) { beforeDraw(); }
                 render();
                 handleClick();
+                handlePress();
                 if(beforeDraw != nullptr) { afterDraw(); }
             }
 
@@ -153,6 +182,12 @@ namespace egui {
         void handleClick() {
             for(int i = components.size() - 1; i >= 0; --i) {
                 if(components[i]->click()) { break; }
+            }
+        }
+
+        void handlePress() {
+            for(int i = components.size() - 1; i >= 0; --i) {
+                if(components[i]->pressed()) { break; }
             }
         }
 

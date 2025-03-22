@@ -3,12 +3,20 @@
 #include "raylib.h"
 #include "egui/egui.hpp"
 #include "egui/label.hpp"
+#include "egui/scrollbar.hpp"
 #include <time.h>
 #include <stdlib.h>
 #include <functional>
 
+void testFunc() {
+    std::cout << "Test" << std::endl;
+}
+
 int main()
 {
+    egui::Pair<int> screen;
+    screen.x = 1280;
+    screen.y = 720;
 
     egui::App app("EGUI", {1280, 720}, 144);
 
@@ -37,6 +45,8 @@ int main()
 
     app.addComponent(new egui::Label(helloWorldText, {0, 0}, WHITE));
     app.addComponent(new egui::Label(hw2, {0, 0}, WHITE));
+
+    app.addComponent(new egui::Scrollbar({screen.x - 20, 0}, {20, screen.y}, 10));
 
     app.mainloop();
 
