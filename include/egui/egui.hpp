@@ -22,6 +22,7 @@ namespace egui {
             Font font;
             float fontSize;
             Color fontColour;
+            float spacing = 1.0f;
         };
 
         enum Size {
@@ -34,7 +35,7 @@ namespace egui {
             h2 = 45,
             h1 = 54
         };
-    
+
         class Typeface {
             private:
             std::map<Size, Font> fonts;
@@ -42,14 +43,17 @@ namespace egui {
             public:
             Typeface(std::string pathToFont, std::vector<Size> sizes) {
                 for(Size size: sizes) {
-                    Font font = LoadFontEx(pathToFont.c_str(), static_cast<int>(size), nullptr, 250);
-
+                    Font font = LoadFontEx(pathToFont.c_str(), static_cast<int>(size), 0, 0);
                     fonts.insert({size, font});
                 }
             }
 
             Pair<int> MeasureText(std::string text, Size size) {
                 Vector2 f = MeasureTextEx(fonts[size], text.c_str(), size, 0);
+                Pair<int> ret;
+                ret.x = static_cast<int>(f.x);
+                ret.y = static_cast<int>(f.y);
+                return ret;
             }
 
             Font operator[] (Size size) {
@@ -57,7 +61,6 @@ namespace egui {
             }
         };
     }
-    
 
     class UIComponent {
         public:
@@ -120,7 +123,7 @@ namespace egui {
 
             scroll = {0, 0};
         }
-        
+
         void addComponent(UIComponent* component) {
             components.push_back(component);
         }
@@ -129,6 +132,7 @@ namespace egui {
             while(!WindowShouldClose()) {
                 if(beforeDraw != nullptr) { beforeDraw(); }
                 render();
+                handleClick();
                 if(beforeDraw != nullptr) { afterDraw(); }
             }
 
@@ -138,11 +142,18 @@ namespace egui {
         void render() {
             BeginDrawing();
             ClearBackground(background);
-            
-            for(int i = components.size()-1; i > -1 ; --i) {
-                components[i]->render(scroll);
+
+            for(auto component: components) {
+                component->render(scroll);
             }
+
             EndDrawing();
+        }
+
+        void handleClick() {
+            for(int i = components.size() - 1; i >= 0; --i) {
+                if(components[i]->click()) { break; }
+            }
         }
 
         void exit() {

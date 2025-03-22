@@ -3,6 +3,6 @@ default:
 	./main.exe
 
 darwin:
-	clang++ -std=c++20 main.cpp `pkg-config --libs --cflags raylib` -o main -I include/egui
+	clang++ -std=c++20 main.cpp `pkg-config --libs --cflags raylib` -o main -I include
 	./main
 

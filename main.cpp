@@ -7,11 +7,11 @@
 #include <stdlib.h>
 #include <functional>
 
-#define SCREENX 1280
-#define SCREENY 720
-
 int main()
 {
+
+    egui::App app("EGUI", {1280, 720}, 144);
+
     egui::text::Typeface Inter("recources/Inter-variable.ttf", 
         {
             egui::text::h1,
@@ -21,18 +21,22 @@ int main()
             egui::text::h5,
             egui::text::h6,
             egui::text::normal,
-            egui::text::small
+            egui::text::small,
         }
     );
 
-    egui::App app("EGUI", {1280, 720}, 144);
-    
     egui::text::Text helloWorldText;
     helloWorldText.text = "Hello world";
-    helloWorldText.fontSize = egui::text::h1;
+    helloWorldText.fontSize = egui::text::small;
     helloWorldText.fontColour = BLACK;
-    helloWorldText.font = Inter[egui::text::h1];
-    app.addComponent(new egui::Label(helloWorldText, {10, 10}, WHITE));
+    helloWorldText.font = Inter[egui::text::small];
+
+
+    auto hw2 = helloWorldText;
+    hw2.text = "Test 2";
+
+    app.addComponent(new egui::Label(helloWorldText, {0, 0}, WHITE));
+    app.addComponent(new egui::Label(hw2, {0, 0}, WHITE));
 
     app.mainloop();
 

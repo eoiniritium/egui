@@ -9,7 +9,7 @@ namespace egui {
         text::Text text;
         Color bgColour;
         Pair<int> padding;
-        
+
         public:
         Label (
             text::Text text,
@@ -28,22 +28,16 @@ namespace egui {
             this->padding = padding;
         }
 
-        void draw(Pair<int> scrolled) override {            
+        void draw(Pair<int> scrolled) override {
             DrawRectangle(
                 position.x, position.y, 
                 size.x, size.y, bgColour
             );
-            DrawText(
-                text.text.c_str(), 
-                position.x + padding.x,
-                position.y + padding.y,
-                text.fontSize,
-                text.fontColour
-            );
-        }
 
-        void onClick() override {
-
+            Vector2 textPos;
+            textPos.x = position.x + padding.x;
+            textPos.y = position.y + padding.y;
+            DrawTextEx(text.font, text.text.c_str(), textPos, text.fontSize, text.spacing, text.fontColour);
         }
     };
 
