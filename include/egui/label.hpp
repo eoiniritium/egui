@@ -39,11 +39,11 @@ namespace egui {
                 size.x, size.y, bgColour
             );
 
-            Vector2 textPos;
+            Pair<int> textPos;
             textPos.x = position.x + padding.x;
             textPos.y = position.y + padding.y;
-            DrawTextEx(text.font, text.text.c_str(), textPos, text.fontSize, text.spacing, text.fontColour);
+
+            text::drawText(this->text, textPos);
         }
     };
-
 }

@@ -46,7 +46,7 @@ int main()
     app.addComponent(new egui::Label(helloWorldText, {0, 0}, WHITE));
     app.addComponent(new egui::Label(hw2, {0, 0}, WHITE));
 
-    app.addComponent(new egui::Scrollbar({screen.x - 20, 0}, {20, screen.y}, 10));
+    app.addComponent(new egui::Scrollbar({screen.x - 10, 0}, {10, screen.y}, 10));
 
     app.mainloop();
 

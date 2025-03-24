@@ -39,7 +39,7 @@ namespace egui {
         }
 
         Pair<int> getScroll() {
-
+            return scroll;
         }
 
         void draw(Pair<int> _) override {

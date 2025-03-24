@@ -62,12 +62,19 @@ namespace egui {
                 return fonts[size];
             }
         };
+
+        void drawText(Text text, Pair<int> position) {
+            Vector2 pos;
+            pos.x = static_cast<float>(position.x);
+            pos.y = static_cast<float>(position.y);
+            DrawTextEx(text.font, text.text.c_str(), pos, text.fontSize, text.spacing, text.fontColour);
+        }
     }
 
     class UIComponent {
         public:
         Pair<int> position, size, scrolled;
-        
+
         onEventCallback onClickFunction;
         onEventCallback onHoverFunction;
         onEventCallback onPressFunction;
@@ -132,8 +139,6 @@ namespace egui {
 
             return false;
         }
-
-        
     };
 
     class App  {
