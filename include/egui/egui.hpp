@@ -144,15 +144,30 @@ namespace egui {
     class App  {
         private:
         std::vector<UIComponent *> components;
+        Scrollbar *verticalScrollBar, *horizontalScrollBar;
         Pair<int> scroll;
         Color background;
 
         public:
-        App(std::string windowName, Pair<int> dimensions, const int targetFPS = 60, const Color background = WHITE) {
-            InitWindow(dimensions.x, dimensions.y, windowName.c_str());
-            SetTargetFPS(targetFPS);
+        struct Options {
+            std::string windowName;
+            Pair<int> dimensions;
+            Color background = WHITE;
+            bool verticalScrollbar = false;
+            bool horizontalScrollbar = false;
+            int targetFPS = 60;
+        };
 
-            this->background = background;
+        App(App::Options options) {
+            InitWindow(options.dimensions.x, options.dimensions.y, options.windowName.c_str());
+            SetTargetFPS(options.targetFPS);
+
+            this->background = options.background;
+            verticalScrollBar = nullptr;
+            horizontalScrollBar = nullptr;
+            if(options.verticalScrollbar) {
+                verticalScrollBar = new Scrollbar();
+            }
 
             scroll = {0, 0};
         }
@@ -197,11 +212,13 @@ namespace egui {
         }
 
         void exit() {
+            CloseWindow();
+
+            delete verticalScrollBar;
+            delete horizontalScrollBar;
             for(auto component: components) {
                 delete component;
             }
-
-            CloseWindow();
         }
     };
 }

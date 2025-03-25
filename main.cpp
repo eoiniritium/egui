@@ -18,7 +18,10 @@ int main()
     screen.x = 1280;
     screen.y = 720;
 
-    egui::App app("EGUI", {1280, 720}, 144);
+    egui::App::Options options;
+    options.windowName = "EGUI";
+    options.dimensions = {1280, 720};
+    egui::App app(options);
 
     egui::text::Typeface Inter("recources/Inter-variable.ttf", 
         {

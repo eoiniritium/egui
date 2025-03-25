@@ -13,16 +13,24 @@ namespace egui {
 
         Color fgColour, bgColour;
 
-        Scrollbar(
-            Pair<int> position,
-            Pair<int> size,
-            int scrollLength,
-            Color bgColour = LIGHTGRAY,
-            Color fgColour = DARKGRAY
-        ) : 
+        enum Orientation {
+            Vertical,
+            Horizontal
+        };
+
+        struct Options {
+            Pair<int> position;
+            Pair<int> size;
+            int scrollLength;
+            Color bgColour = LIGHTGRAY;
+            Color fgColour = DARKGRAY;
+
+        };
+
+        Scrollbar(Options options) : 
         UIComponent(
-            position,
-            size
+            options.position,
+            options.size
         ) {
             grabberSize.x = size.x;
             grabberSize.y = size.y / scrollLength;
